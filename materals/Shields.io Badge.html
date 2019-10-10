@@ -11,14 +11,41 @@
       margin-left: 50px;
     }
 
-    .liulinwj-badge {
+    .liulinwj-badge-show {
+      height: 40px;
+      margin-left: 130px;
+    }
+    .liulinwj-badge-img-container {
+      display: inline-grid;
+      grid-template-columns: auto auto;
+    }
+    .liulinwj-badge-btn-container {
+      display: grid;
+      align-items: stretch;
+      height: auto;
+      margin-left: 10px;
+    }
+    .liulinwj-badge-btn {
+      width: 80px;
+      height: auto;
+      border: 1px solid #ccdddd;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .liulinwj-badge-src {
+      position: absolute;
+      top: -100px;
+      left: -100px;
+    }
+
+    .liulinwj-badge-form {
       display: grid;
       grid-template-columns: 130px auto;
       grid-row-gap: 3px;
+      align-items: center;
     }
     .liulinwj-badge-label {
       justify-self: stretch;
-      align-self: center;
       text-align: right;
       box-sizing: border-box;
       height: 35px;
@@ -35,8 +62,8 @@
       color: #cc0000;
       font-size: 18px;
     }
-    .liulinwj-badge input,
-    .liulinwj-badge select {
+    .liulinwj-badge-form input,
+    .liulinwj-badge-form select {
       box-sizing: border-box;
       width: 100%;
       height: 35px;
@@ -44,49 +71,29 @@
       border: 1px solid #ccdddd;
     }
 
-    .liulinwj-badge-dest,
-    .liulinwj-badge-img-container {
-      grid-column: 1 / span 2;
-      justify-self: center;
-      padding-top: 20px;
-    }
     .liulinwj-badge-dest {
+      justify-self: center;
       margin-left: 110px;
+      grid-column: 1 / span 2;
       text-indent: -43px;
-    }
-
-    .liulinwj-badge-img-container {
-      display: grid;
-      grid-template-columns: auto auto;
-    }
-    .liulinwj-badge-img-container > * {
-      vertical-align: bottom;
-    }
-
-    .liulinwj-badge-btn-container {
-      display: grid;
-      height: auto;
-      margin-left: 10px;
-      align-items: stretch;
-    }
-    .liulinwj-badge-btn {
-      width: 80px!important;
-      height: auto!important;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    
-    .liulinwj-badge-src {
-      position: absolute;
-      top: -100px;
-      left: -100px;
+      padding-top: 20px;
     }
   </style>
 </head>
 <body>
   <h2 class="liulinwj-badge-title">Shiels.io Generator</h2>
+
+  <div class="liulinwj-badge-show">
+    <div class="liulinwj-badge-img-container">
+        <img id="badge" style="width: auto;">
+        <div class="liulinwj-badge-btn-container">
+          <input type="button" class="liulinwj-badge-btn js-copy" value="Copy">
+        </div>
+        <input type="text" class="liulinwj-badge-src">
+      </div>
+  </div>
     
-  <div class="liulinwj-badge">
+  <div class="liulinwj-badge-form">
     <div class="liulinwj-badge-label">Label</div>
     <input type="text" class="js-badge-data" data-key="label" value="Blog" placeholder="Optional">
 
@@ -122,14 +129,6 @@
 
     <div class="liulinwj-badge-dest">
       <b>Logo</b>: data url, <a href="https://simpleicons.org/" target="_blank">simple-icons</a> or (bitcoin, dependabot, discord, gitlab, npm, paypal, serverfault, stackexchange, superuser, telegram, travis). Icons of last part is colorful, so "logoColor" will not function if chosen. 
-    </div>
-    
-    <div class="liulinwj-badge-img-container">
-      <img id="badge" style="width: auto;">
-      <div class="liulinwj-badge-btn-container">
-        <input type="button" class="liulinwj-badge-btn js-copy" value="Copy">
-      </div>
-      <input type="text" class="liulinwj-badge-src">
     </div>
 
   </div>
