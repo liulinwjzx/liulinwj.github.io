@@ -90,12 +90,12 @@
 
   <div class="liulinwj-badge-show">
     <div class="liulinwj-badge-img-container">
-        <img id="badge" style="width: auto;">
-        <div class="liulinwj-badge-btn-container">
-          <input type="button" class="liulinwj-badge-btn js-copy" value="Copy">
-        </div>
-        <input type="text" class="liulinwj-badge-src">
+      <img id="badge" style="width: auto;">
+      <div class="liulinwj-badge-btn-container">
+        <input type="button" class="liulinwj-badge-btn js-copy" value="Copy">
       </div>
+      <input type="text" class="liulinwj-badge-src">
+    </div>
   </div>
     
   <div class="liulinwj-badge-form">
@@ -147,28 +147,6 @@
         message: "@Liulinwj",
         messageColor: "brightgreen",
       };
-
-      const div = document.createElement("div");
-
-      function isValidColor(color) {
-        if (color.startsWith("#")) {
-          return false;
-        }
-        if (/^[0-9a-f]/i.test(color)) {
-          color = "#" + color;
-        }
-        div.style.color = "";
-        div.style.color = color;
-        return Boolean(div.style.color);
-      }
-
-      function isValidStyle(s) {
-        if (!s) {
-          return true;
-        }
-        return s === "plastic" || s === "flag" || s === "flat-square"
-            || s === "for-the-badge" || s === "social";
-      }
 
       const proxy = new Proxy(obj, {
         set(o, k, dom) {
@@ -228,17 +206,37 @@
           return;
         }
         document.querySelector(".liulinwj-badge-src").select();
-        var x = document.execCommand("copy");
-        if (x) {
-          locked = true;
-          this.value = "Copied..."
-          setTimeout(() => {
-            this.value = "Copy";
-            locked = false;
-          }, 1000);
-        }
+        let success = document.execCommand("copy");
+        locked = true;
+        this.value = success ? "Copied..." : "Failed...";
+        setTimeout(() => {
+          this.value = "Copy";
+          locked = false;
+        }, 1000);
       });
   
+
+      const div = document.createElement("div");
+      function isValidColor(color) {
+        if (color.startsWith("#")) {
+          return false;
+        }
+        if (/^[0-9a-f]/i.test(color)) {
+          color = "#" + color;
+        }
+        div.style.color = "";
+        div.style.color = color;
+        return Boolean(div.style.color);
+      }
+
+      function isValidStyle(s) {
+        if (!s) {
+          return true;
+        }
+        return s === "plastic" || s === "flag" || s === "flat-square"
+            || s === "for-the-badge" || s === "social";
+      }
+      
       function setBadge() {
         let lable = proxy.label ? proxy.label + "-" : "";
         let url = `https://img.shields.io/badge/${lable}${proxy.message}-${obj.messageColor}`;
