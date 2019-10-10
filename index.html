@@ -1,1 +1,36 @@
-html:5  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Liulinwj</title>
+  <style>
+    body {
+      overflow: hidden;
+      margin: 0;
+    }
+    #iframe {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <iframe id="iframe"></iframe>
+</body>
+<script>
+  (function() {
+    const query = location.search;
+    let subpage = query.replace(/[\?&]a=(.+)[^\?&]?/, "$1");
+    try {
+      subpage = decodeURIComponent(subpage);
+    } catch(err) {
+    }
+    if (subpage) {
+      window.frames.iframe.src = subpage;
+    }
+  })();
+</script>
+</html>
