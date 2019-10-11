@@ -17,10 +17,32 @@
     }
     .liulinwj-header {
       background: #cccccc;
-      height: 70px;
+      padding: 10px 0 10px 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .liulinwj-sign {
+      font-size: 35px;
+      font-weight: bold;
+    }
+    .liulinwj-desc {
+      margin-top: 6px;
+      margin-left: 40px;
+      display: grid;
+      grid-template-columns: 70px auto;
+      font-size: 18px;
+    }
+    .liulinwj-desc-dash {
+      width:90%;
+      height: 0;
+      border: none;
+      border-top: 2px solid #000000;
+      border-radius: 1px;
     }
     .liulinwj-footer {
       background: #cccccc;
+      color: inherited;
       height: 50px;
     }
     .liulinwj-body {
@@ -42,7 +64,13 @@
   </style>
 </head>
 <body>
-  <header class="liulinwj-header"></header>
+  <header class="liulinwj-header">
+    <div class="liulinwj-sign">Liulinwj</div>
+    <div class="liulinwj-desc">
+      <hr class="liulinwj-desc-dash">
+      <div class="liulinwj-desc-text">Like art of codes, like art of musical notes, like art of lights and shades, like art of natural objects.</div>
+    </div>
+  </header>
   <div class="liulinwj-body">
     <div class="liulinwj-navigator"></div>
     <iframe id="iframe"></iframe>
