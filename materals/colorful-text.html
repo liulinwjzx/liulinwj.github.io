@@ -199,6 +199,9 @@
 
       function setFormula(e) {
         let str = proxy.text.trim();
+        if (!str) {
+          return;
+        }
         let result = "\\" + proxy.size + "{";
         let counter = 0;
         let color;
