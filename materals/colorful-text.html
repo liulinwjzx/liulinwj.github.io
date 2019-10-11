@@ -210,6 +210,9 @@
             result += "\\quad";
             continue;
           }
+          if (/^[#%&\^\_\{\}\\\~\|\(\)\+\-\=\']/.test(s)) {
+            s = "\\" + s;
+          }
           while ((color = COLORS[Math.floor(Math.random() * COLORS.length)]) === lastColor) {}
           result += `\\color{${lastColor = color}}{${s}}`;
           counter++;
