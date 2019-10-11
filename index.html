@@ -7,18 +7,47 @@
   <title>Liulinwj</title>
   <style>
     body {
+      display: flex;
+      flex-direction: column;
+      justify-content: stretch;
+      width: 100vw;
+      height: 100vh;
       overflow: hidden;
       margin: 0;
     }
+    .liulinwj-header {
+      background: #cccccc;
+      height: 70px;
+    }
+    .liulinwj-footer {
+      background: #cccccc;
+      height: 50px;
+    }
+    .liulinwj-body {
+      flex-grow: 1;
+      display: flex;
+    }
+    .liulinwj-navigator {
+      width: 300px;
+      border-right: 1px solid #999999;
+    }
+    .liulinwj-attach {
+      width: 100px;
+    }
     #iframe {
-      width: 100vw;
-      height: 100vh;
+      flex-grow: 1;
       border: none;
     }
   </style>
 </head>
 <body>
-  <iframe id="iframe"></iframe>
+  <header class="liulinwj-header">This is header</header>
+  <div class="liulinwj-body">
+    <div class="liulinwj-navigator"></div>
+    <iframe id="iframe"></iframe>
+    <div class="liulinwj-attach"></div>
+  </div>
+  <footer class="liulinwj-footer">This is footer</footer>
 </body>
 <script>
   (function() {

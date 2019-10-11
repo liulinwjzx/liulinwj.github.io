@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Colurful Text</title>
+  <style>
+    body {
+      font-size: 13px;
+    }
+
+    .liulinwj-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .liulinwj-option {
+      display: flex;
+      align-items: stretch;
+      height: 25px;
+    }
+
+    .liulinwj-option-center {
+      text-align: center;
+    }
+
+    .liulinwj-option > * {
+      border: 1px solid #ddcccc;
+      box-sizing: border-box;
+    }
+
+    .liulinwj-label {
+      width: 125px;
+      align-items: center;
+      padding: 4px 8px 0 0;
+      background-color: #f0f0f0;
+      font-weight: bold;
+      text-align: right;
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+
+    .liulinwj-container input,
+    .liulinwj-container select {
+      padding-left: 5px;
+      width: 130px;
+      flex-grow: 1;
+    }
+
+    .liulinw-formula-copy,
+    .liulinw-formula-build {
+      align-self: flex-end;
+      margin-top: 7px;
+      width: 70px!important;
+      height: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      border-color: 1px solid #cccccc;
+    }
+
+    .liulinw-formula-copy {
+      align-self: flex-end;
+    }
+
+    .liulinwj-input {
+      height: 20vh;
+    }
+
+    .liulinwj-output {
+      height: 20vh;
+      background-color: #cccccc;
+    }
+
+    #fomular {
+      margin-top: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="liulinwj-container">
+    <div class="liulinwj-option">
+      <div class="liulinwj-label">Size</div>
+      <select class="js-formula-unit" data-key="size">
+        <option value="Huge">Huge</option>
+        <option value="huge">huge</option>
+        <option value="LARGE">LARGE</option>
+        <option value="Large">Large</option>
+        <option value="large">large</option>
+        <option value="normalsize">normalsize</option>
+        <option value="small">small</option>
+        <option value="scriptsize">scriptsize</option>
+        <option value="Tiny">Tiny</option>
+        <option value="tiny">tiny</option>
+      </select>
+    </div>
+    <div class="liulinwj-option">
+      <div class="liulinwj-label">Weight</div>
+      <select class="js-formula-unit" data-key="bold">
+        <option value="bold">Bold</option>
+        <option value="">Normal</option>
+      </select>
+    </div>
+    <div class="liulinwj-option">
+      <div class="liulinwj-label">Words Per Line</div>
+      <input type="" class="js-formula-unit" data-key="wordPerLine">
+    </div>
+    <textarea tpe="text" class="liulinwj-input js-formula-unit" data-key="text"></textarea>
+    <textarea class="liulinwj-output js-output" readonly></textarea>
+    <div class="liulinwj-option-center">
+      <input type="button" class="liulinw-formula-build js-build" value="Build">
+      <input type="button" class="liulinw-formula-copy js-copy" value="Copy">
+    </div>
+    <img id="fomular" class="js-img">
+  </div>
+  <script>
+    (function () {
+
+      const COLORS = [
+        "red", "blue", "darkgreen", "#ff7500", "#16a951", "#815463", "#725e82", "#057748", "#f20c00", "#9b4400",
+        "#ff0097", "#7d5886",
+      ];
+
+      const obj = {
+        bold: "bold",
+        size: "Huge",
+        text: "天高绝顶我作峰",
+        wordPerLine: "0",
+      };
+
+      const proxy = new Proxy(obj, {
+        set(o, k, dom) {
+          let v = dom.value.trim();
+          let isValid = true;
+          switch (k) {
+            case "bold":
+            case "size":
+            case "text":
+              break;
+            case "wordPerLine":
+              let n = Number(v);
+              if (n < 0 || n > 100 || !Number.isInteger(n)) {
+                isValid = false;
+              }
+              break;
+            default:
+              return false;
+          }
+          if (!isValid) {
+            v = Reflect.get(o, k);
+          }
+          if (!v) {
+            Reflect.deleteProperty(o, k);
+          } else {
+            Reflect.set(o, k, v);
+          }
+          if (dom.tagName.toLowerCase() === "textarea") {
+            dom.innerHTML = v || "";
+          } else {
+            dom.value = v || "";
+          }
+          setFormula();
+        }
+      });
+      setFormula();
+
+
+      for (let v of document.querySelectorAll(".js-formula-unit")) {
+        v.value = proxy[v.dataset.key] || "";
+        v.addEventListener("change", function (e) {
+          proxy[this.dataset.key] = this;
+        });
+        v.addEventListener("keyup", function (e) {
+          if (e.keyCode === 13) {
+            proxy[this.dataset.key] = this;
+          }
+        });
+      }
+      document.querySelector(".js-build").addEventListener("click", setFormula);
+
+
+      let locked = false;
+      document.querySelector(".js-copy").addEventListener("click", function (e) {
+        if (locked) {
+          return;
+        }
+        document.querySelector(".liulinwj-output").select();
+        let success = document.execCommand("copy");
+        locked = true;
+        this.value = success ? "Copied..." : "Failed...";
+        setTimeout(() => {
+          this.value = "Copy";
+          locked = false;
+        }, 1000);
+      });
+
+
+      function setFormula(e) {
+        let str = proxy.text.trim();
+        let result = "\\" + proxy.size + "{";
+        let counter = 0;
+        let color;
+        let lastColor;
+        for (var s of str.trim()) {
+          if (/[\r\n]/.test(s)) {
+            result += "\\\\ ";
+            continue;
+          }
+          if (/\s/.test(s)) {
+            result += "\\quad";
+            continue;
+          }
+          while ((color = COLORS[Math.floor(Math.random() * COLORS.length)]) === lastColor) {}
+          result += `\\color{${lastColor = color}}{${s}}`;
+          counter++;
+          if (proxy.wordPerLine > 0 && counter % proxy.wordPerLine === 0) {
+            if (/^[\w“(]/.test(s)) {
+              counter--;
+            } else {
+              result += " \\\\ ";
+            }
+          }
+        }
+        result += "}";
+        if (proxy.bold === "bold") {
+          result = `\\style{font-weight:bold;}{${result}}`;
+        }
+        document.querySelector(".js-output").value = result;
+        document.querySelector(".js-img").src = "https://www.zhihu.com/equation?tex=" + encodeURIComponent(result);
+      }
+
+    })();
+  </script>
+</body>
+
+</html>

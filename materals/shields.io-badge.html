@@ -14,6 +14,7 @@
       color: #0000ee;
       text-decoration: none;
     }
+
     a:hover {
       text-decoration: underline;
     }
@@ -26,16 +27,19 @@
       height: 40px;
       margin-left: 80px;
     }
+
     .liulinwj-badge-img-container {
       display: inline-grid;
       grid-template-columns: auto auto;
     }
+
     .liulinwj-badge-btn-container {
       display: grid;
       align-items: stretch;
       height: auto;
       margin-left: 10px;
     }
+
     .liulinwj-badge-btn {
       width: 80px;
       height: auto;
@@ -43,6 +47,7 @@
       border-radius: 5px;
       cursor: pointer;
     }
+
     .liulinwj-badge-src {
       position: absolute;
       top: -100px;
@@ -55,6 +60,7 @@
       grid-row-gap: 3px;
       align-items: center;
     }
+
     .liulinwj-badge-label {
       justify-self: stretch;
       text-align: right;
@@ -66,6 +72,7 @@
       font-weight: bold;
       background-color: #cccccc;
     }
+
     .liulinwj-badge-required::after {
       float: right;
       padding-left: 3px;
@@ -73,6 +80,7 @@
       color: #cc0000;
       font-size: 18px;
     }
+
     .liulinwj-badge-form input,
     .liulinwj-badge-form select {
       box-sizing: border-box;
@@ -98,12 +106,14 @@
       .liulinwj-badge-show {
         margin-left: 40px;
       }
+
       .liulinwj-badge-dest {
         margin-left: 40px;
       }
     }
   </style>
 </head>
+
 <body>
   <h2 class="liulinwj-badge-title">Shiels.io Generator</h2>
 
@@ -116,7 +126,7 @@
       <input type="text" class="liulinwj-badge-src">
     </div>
   </div>
-    
+
   <div class="liulinwj-badge-form">
     <div class="liulinwj-badge-label">Label</div>
     <input type="text" class="js-badge-data" data-key="label" value="Blog" placeholder="Optional">
@@ -128,7 +138,8 @@
     <input type="text" class="js-badge-data" data-key="message" value="@Liulinwj">
 
     <div class="liulinwj-badge-label liulinwj-badge-required">Message Color</div>
-    <input type="text" class="js-badge-data" data-key="messageColor" placeholder="HEX (no # sign), RGB, RGBA, HSL, HSLA or CSS named colors">
+    <input type="text" class="js-badge-data" data-key="messageColor"
+      placeholder="HEX (no # sign), RGB, RGBA, HSL, HSLA or CSS named colors">
 
     <div class="liulinwj-badge-label">Style</div>
     <select class="js-badge-data" data-key="style">
@@ -143,7 +154,8 @@
     <input type="text" class="js-badge-data" data-key="logo" placeholder="data url, simple-icons or (bitcoin, dependabot, discord, gitlab, npm, paypal, serverfault, stackexchange, superuser, telegram, travis)">
 
     <div class="liulinwj-badge-label">logoColor</div>
-    <input type="text" class="js-badge-data" data-key="logoColor" placeholder="HEX (no # sign), RGB, RGBA, HSL, HSLA or CSS named colors">
+    <input type="text" class="js-badge-data" data-key="logoColor"
+      placeholder="HEX (no # sign), RGB, RGBA, HSL, HSLA or CSS named colors">
 
     <div class="liulinwj-badge-label">logoWidth</div>
     <input type="text" class="js-badge-data" data-key="logoWidth" placeholder="Non negative number">
@@ -152,16 +164,19 @@
     <input type="text" class="js-badge-data" data-key="link" placeholder="Obseleted in svg standard now">
 
     <div class="liulinwj-badge-dest">
-      <p><b>Logo</b>: data url, <a href="https://simpleicons.org/" target="_blank">simple-icons</a> or (bitcoin, dependabot, discord, gitlab, npm, paypal, serverfault, stackexchange, superuser, telegram, travis). Icons of last part is colorful, so "logoColor" will not function if chosen. </p>
-      <p>This page is a shortcut for <a href="https://shields.io/" target="_blank">Shield.io</a> who generate badge svg repsponses. Thanks.</p>
+      <p><b>Logo</b>: data url, <a href="https://simpleicons.org/" target="_blank">simple-icons</a> or (bitcoin,
+        dependabot, discord, gitlab, npm, paypal, serverfault, stackexchange, superuser, telegram, travis). Icons of
+        last part is colorful, so "logoColor" will not function if chosen. </p>
+      <p>This page is a shortcut for <a href="https://shields.io/" target="_blank">Shield.io</a> who generates badge svg
+        repsponses. Thanks.</p>
       <p id="copyright">@Liulinwj</p>
     </div>
 
   </div>
-  
+
   <script>
-    (function() {
-  
+    (function () {
+
       const obj = {
         message: "@Liulinwj",
         messageColor: "brightgreen",
@@ -171,7 +186,7 @@
         set(o, k, dom) {
           let v = dom.value.trim();
           let isValid = true;
-          switch(k) {
+          switch (k) {
             case "message":
               isValid = Boolean(v);
               break;
@@ -188,7 +203,11 @@
             case "style":
               isValid = isValidStyle(v);
               break;
+            case "label":
+            case "link":
+              break;
             default:
+              return false;
           }
           if (!isValid) {
             v = Reflect.get(o, k);
@@ -208,10 +227,10 @@
 
       for (let v of document.querySelectorAll(".js-badge-data")) {
         v.value = proxy[v.dataset.key] || "";
-        v.addEventListener("change", function(e) {
+        v.addEventListener("change", function (e) {
           proxy[this.dataset.key] = this;
         });
-        v.addEventListener("keyup", function(e) {
+        v.addEventListener("keyup", function (e) {
           if (e.keyCode === 13) {
             proxy[this.dataset.key] = this;
           }
@@ -219,7 +238,7 @@
       }
 
       let locked = false;
-      document.querySelector(".js-copy").addEventListener("click", function(e) {
+      document.querySelector(".js-copy").addEventListener("click", function (e) {
         if (locked) {
           return;
         }
@@ -232,9 +251,10 @@
           locked = false;
         }, 1000);
       });
-  
+
 
       const div = document.createElement("div");
+
       function isValidColor(color) {
         if (color.startsWith("#")) {
           return false;
@@ -251,10 +271,10 @@
         if (!s) {
           return true;
         }
-        return s === "plastic" || s === "flag" || s === "flat-square"
-            || s === "for-the-badge" || s === "social";
+        return s === "plastic" || s === "flag" || s === "flat-square" ||
+          s === "for-the-badge" || s === "social";
       }
-      
+
       function setBadge() {
         let lable = proxy.label ? proxy.label + "-" : "";
         let url = `https://img.shields.io/badge/${lable}${proxy.message}-${obj.messageColor}`;
@@ -277,8 +297,9 @@
         document.getElementById("badge").src = url;
         document.querySelector(".liulinwj-badge-src").value = url;
       }
-  
+
     })();
   </script>
 </body>
+
 </html>
