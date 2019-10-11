@@ -43,10 +43,16 @@
     .liulinwj-footer {
       height: 50px;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       color: inherited;
       background-color: #d3d7d4;
+    }
+    .liulinwj-msg-board {
+      align-self: flex-end;
+      padding-right: 20px;
+      animation: fade 3s linear 3s infinite alternate;;
     }
     .liulinwj-body {
       flex-grow: 1;
@@ -64,6 +70,11 @@
       flex-grow: 1;
       border: none;
     }
+
+    @keyframes fade {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
   </style>
 </head>
 <body>
@@ -80,7 +91,8 @@
     <div class="liulinwj-attach"></div>
   </div>
   <footer class="liulinwj-footer">
-    Designed & Powerd by &copy;Liulinwj
+    <div>Designed & Powerd by &copy;Liulinwj</div>
+    <div class="liulinwj-msg-board">It's me, past, now, and forever.</div>
   </footer>
 </body>
 <script>
