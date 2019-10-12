@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="author" content="Liulinwj">
+  <meta name="published" content="https://liulinwjzx.github.io">
+  <title>HTML Color</title>
+  <style>
+    body {
+      font-size: 14px;
+      background-color: #bbbdc5;
+      user-select: none;
+    }
+    .liulinwj-color-container {
+      display: flex;
+      flex-direction: column;
+      max-width: 720px;
+      margin: auto;
+    }
+    .liulinwj-color-title {
+      margin-left: 10px;
+    }
+    .liulinwj-color-classfication {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .liulinwj-color-classfication > * {
+      position: relative;
+      width: 150px;
+      height: 28px;
+      padding: 15px 0 0 15px;
+      color: blue;
+      font-size: 1.2em;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .liulinwj-color-classfication > *::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border: 1px solid #999999;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 50px;
+      background-color: #a6cadc;
+      transform: perspective(1em) rotateX(3deg);
+      transform-origin: bottom left;
+    }
+    .liulinwj-color-classfication > *:nth-child(4) {
+      padding-left: 10px;
+      z-index: 400;
+    }
+    .liulinwj-color-classfication > *:nth-child(3) {
+      z-index: 300;
+      left: -20px;
+    }
+    .liulinwj-color-classfication > *:nth-child(2) {
+      z-index: 200;
+      left: -40px;
+    }
+    .liulinwj-color-classfication > *:nth-child(1) {
+      z-index: 100;
+      left: -60px;
+    }
+    
+    .liulinwj-color-classfication > .active {
+      color: #444444;
+      cursor: default;
+    }
+
+    .liulinwj-color-list {
+      display: grid;
+      display: none;
+      justify-content: stretch;
+      grid-template-columns: repeat(7, auto);
+      grid-gap: 1px;
+      border: 3px #7397ab outset;
+      background-color: #7397ab;
+    }
+    #list-1 {
+      grid-template-columns: repeat(7, calc((720px - 6px - 6px) / 7));
+    }
+    #list-2 {
+      grid-template-columns: repeat(8, calc((720px - 6px - 7px) / 8));
+    }
+    #list-3 {
+      grid-template-columns: repeat(6, calc((720px - 6px - 5px) / 6));
+    }
+    #list-4 {
+      grid-template-columns: repeat(5, calc((720px - 6px - 4px) / 5));
+    }
+    #list-4 > * {
+      font-size: .95em;
+    }
+    .liulinwj-color-list > * {
+      display: flex;
+      justify-content: center;
+      flex-grow: 1;
+      height: 32px;
+      align-items: center;
+      font-family: 'Microsoft Yahei';
+      color: #111111;
+      cursor: default;
+    }
+    .liulinwj-color-list > .liulinwj-list-white-item {
+      color: #cccccc;
+    }
+    .liulinwj-color-classfication + .liulinwj-color-list {
+      display: grid;
+    }
+
+    #code {
+      position: absolute;
+      top: -100px;
+      left: -100px;
+    }
+
+    .copied {
+      position: absolute;
+      animation: flyAway 1300ms ease-in 0ms 1 alternate forwards;
+    }
+    .copied::before {
+      content: "Copied";
+      font-size: 20px;
+    }
+
+    @keyframes flyAway {
+      95% {
+        z-index: 999;
+      }
+      to {
+        top: -300px;
+        display: none;
+        z-index: -99999;
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="liulinwj-color-container">
+    <h2 class="liulinwj-color-title">Color Copier —— Only by click</h2>
+    <div class="liulinwj-color-form">
+
+    </div>
+    <div class="liulinwj-color-classfication">
+      <div class="js-tag" data-key="4">CSS Color Name</div>
+      <div class="js-tag" data-key="3">Safe Color Disk</div>
+      <div class="js-tag" data-key="2">Color Names 2</div>
+      <div class="js-tag active" data-key="1">Color Names 1</div>
+    </div>
+    <div id="list-1" class="liulinwj-color-list js-list"></div>
+    <div id="list-2" class="liulinwj-color-list js-list"></div>
+    <div id="list-3" class="liulinwj-color-list js-list"></div>
+    <div id="list-4" class="liulinwj-color-list js-list"></div>
+  </div>
+  <input type="text" id="code">
+
+  <script>
+
+    for (let dom of document.querySelectorAll(".js-tag")) {
+      dom.addEventListener("click", function(e) {
+        let key = this.dataset.key;
+        if (key === undefined) {
+          return;
+        }
+        if (this.classList.contains("active")) {
+          return;
+        }
+
+        let zIndex = 10000;
+        let zIndexAdder = 100;
+        for (let tag of document.querySelectorAll(".js-tag")) {
+          tag.classList.remove("active");
+          tag.style.zIndex = zIndex += zIndexAdder;
+          if (tag === this) {
+            zIndexAdder = -100;
+          }
+        }
+        this.classList.add("active");
+
+        for (let list of document.querySelectorAll(".js-list")) {
+          list.style.display = "none";
+        }
+        document.querySelector("#list-" + key).style.display = "grid";
+      });
+    }
+
+
+    for (let tag of document.querySelectorAll(".js-list")) {
+      tag.addEventListener("click", function(e) {
+        let target = e.target;
+        let color = target.dataset.color;
+        if (!color) {
+          return;
+        }
+        if (target.parentElement.classList.contains("js-list")) {
+          var x = target.style.backgroundColor;
+          var code = document.querySelector("#code");
+          code.value = color;
+          code.select();
+          document.execCommand("copy");
+          flyAway(e.clientX, e.clientY);
+        }
+      });
+    }
+
+    function flyAway(x, y) {
+      let div = document.createElement("div");
+      div.classList.add("copied");
+      div.style.top = window.scrollY + y - 20 + "px";
+      div.style.left = x - 25 + "px";
+      document.body.append(div);
+      setTimeout(() => {
+        div.remove();
+      }, 999);
+    }
+    
+    const COLOR_1 = [
+      "紫檀", "#4c221b", "栗色", "#60281e", "玄色", "#622a1d", "胭脂", "#9d2933", "银朱", "#bf242a",
+      "枣红", "#c32136", "殷红", "#be002f", "赫赤", "#c91f37", "石榴红", "#f20c00", "绯红", "#c83c23",
+      "酡红", "#dc3023", "大红", "#ff2121", "炎", "#ff3300", "朱砂", "#ff461f", "朱膘", "#ff461f",
+      "妃色", "#ed5736", "朱红", "#ff4c00", "丹", "#ff4e20", "彤", "#f35336", "银红", "#f05654",
+      "茜色", "#cb3a56", "火红", "#ff2d51", "品红", "#f00056", "海棠红", "#db5a6b", "樱桃红", "#c93756",
+      "桃红", "#f47983", "洋红", "#ff0097", "紫棠", "#56004f", "青莲", "#801dae", "紫色", "#8d4bbb",
+      "粉红", "#ffb3a7", "绛紫", "#8c4356", "嫣红", "#ef7a82", "绾", "#a98175", "檀", "#b36d61",
+      "酡颜", "#f9906f", "鹅黄", "#fff143", "鸭黄", "#faff72", "樱草色", "#eaff56", "杏黄", "#ffa631",
+      "杏红", "#ff8c31", "橘黄", "#ff8936", "橙黄", "#ffa400", "橘红", "#ff7500", "姜黄", "#ffc773",
+      "缃色", "#f0c239", "橙色", "#fa8c35", "茶色", "#b35c44", "驼色", "#a88462", "昏黄", "#c89b40",
+      "棕色", "#b25d25", "棕绿", "#827100", "棕黑", "#7c4b00", "棕红", "#9b4400", "棕黄", "#ae7000",
+      "赭", "#9c5333", "赭色", "#955539", "琥珀", "#ca6924", "褐色", "#6e511e", "枯黄", "#d3b17d",
+      "黄栌", "#e29c45", "秋色", "#896c39", "秋香色", "#d9b611", "嫩绿", "#bddd22", "柳黄", "#c9dd22",
+      "柳绿", "#afdd22", "竹青", "#789262", "葱黄", "#a3d900", "葱绿", "#9ed900", "葱青", "#0eb83a",
+      "青葱", "#0aa344", "油绿", "#00bc12", "绿沈", "#0c8918", "碧色", "#1bd1a5", "碧绿", "#2add9c",
+      "青碧", "#48c0a3", "翡翠色", "#48c0a3", "草绿", "#40de5a", "青色", "#00e09e", "青翠", "#00e079",
+      "青白", "#c0ebd7", "鸭卵青", "#e0eee8", "蟹壳青", "#bbcdc5", "鸦青", "#424c50", "绿色", "#00e500",
+      "豆绿", "#9ed048", "豆青", "#96ce54", "石青", "#7bcfa6", "玉色", "#2edfa3", "缥", "#7fecad", "艾绿",
+      "#a4e2c6", "松柏绿", "#21a675", "松花绿", "#057748", "松花色", "#bce672", "蓝", "#44cef6", "靛青",
+      "#177cb0", "靛蓝", "#065279", "碧蓝", "#3eede7", "蔚蓝", "#70f3ff", "宝蓝", "#4b5cc4", "蓝灰色",
+      "#a1afc9", "藏青", "#2e4e7e", "藏蓝", "#3b2e7e", "黛色", "#4a4266", "黛螺", "#4a4266", "黛绿",
+      "#426666", "黛蓝", "#425066", "黛紫", "#574266", "紫酱", "#815463", "酱紫", "#815476", "绀青",
+      "#003371", "群青", "#4c8dae", "雪青", "#b0a4e3", "丁香色", "#cca4e3", "藕色", "#edd1d8", "藕荷色",
+      "#e4c6d0", "苍色", "#75878a", "苍翠", "#519a73", "苍黄", "#a29b7c", "苍青", "#7397ab", "苍黑",
+      "#395260", "苍白", "#d1d9e0", "水色", "#88ada6", "水红", "#f3d3e7", "水绿", "#f3d3e7", "水蓝",
+      "#d2f0f4", "淡青", "#d2f0f4", "湖蓝", "#30dff3", "湖绿", "#25f8cb", "精白", "#ffffff", "象牙白",
+      "#fffbf0", "雪白", "#f0fcff", "月白", "#d6ecf0", "缟", "#f2ecde", "素", "#e0f0e9", "荼白", "#f3f9f1",
+      "霜色", "#e9f1f6", "鱼肚白", "#fcefe8", "莹白", "#e3f9fd", "灰色", "#808080", "牙色", "#eedeb0",
+      "铅白", "#f0f0f4", "玄青", "#3d3b4f", "乌色", "#725e82", "乌黑", "#392f41", "漆黑", "#161823",
+      "墨色", "#50616d", "墨灰", "#758a99", "黑色", "#000000", "缁色", "#493131", "煤黑", "#312520",
+      "黧", "#5d513c", "黎", "#75664d", "黝", "#6b6882", "黝黑", "#665757", "黯", "#41555d", "赤金", "#f2be45",
+      "金色", "#eacd76", "银白", "#e9e7ef", "铜绿", "#549688", "乌金", "#a78e44", "老银", "#bacac6",
+      "赭石", "#845a33", "石绿", "#16a951", "白粉", "#fff2df", "花青", "#003472", "藤黄", "#ffb61e",
+      "雌黄", "#ffc64b", "雄黄", "#e9bb1d", "石黄", "#e9bb1d", "白色", "#ffffff"
+    ];
+
+    const COLOR_2 = [
+      "鸨色","#f7acbc", "赤白橡","#DEAB8A", "油色","#817936", "绀桔梗","#444693", "踯躅色","#ef5b9c",
+      "肌色","#fedcbd", "伽罗色","#7f7522", "花色","#2b4490", "樱色","#feeeed", "橙色","#f47920",
+      "青丹","#80752c", "琉璃色","#2a5caa", "蔷薇色","#f05b72", "灰茶","#905a3d", "莺色","#87843b",
+      "琉璃绀","#224b8f", "韩红","#f15b6c", "茶色","#8f4b2e", "利久色","#726930", "绀色","#003a6c",
+      "珊瑚色","#f8aba6", "桦茶色","#87481f", "媚茶","#454926", "青","#102b6a", "红梅色","#f69c9f",
+      "枯茶","#5f3c23", "蓝海松茶","#2e3a1f", "杜若色","#426ab3", "桃色","#f58f98", "焦茶","#6b473c",
+      "青钝","#4d4f36", "胜色","#46485f", "薄柿","#ca8687", "柑子色","#faa755", "抹茶色","#b7ba6b",
+      "群青色","#4e72b8", "薄红梅","#f391a9", "杏色","#fab27b", "黄緑","#b2d235", "铁绀","#181d4b",
+      "曙色","#bd6758", "蜜柑色","#f58220", "苔色","#5c7a29", "蓝铁","#1a2933", "红色","#d71345",
+      "褐色","#843900", "若草色","#bed742", "青褐","#121a2a", "赤丹","#d64f44", "路考茶","#905d1d",
+      "若绿","#7fb80e", "褐返","#0c212b", "红赤","#d93a49", "饴色","#8a5d19", "萌黄","#a3cf62",
+      "藤纳户","#6a6da9", "胭脂色","#b3424a", "丁子色","#8c531b", "苗色","#769149", "桔梗色","#585eaa",
+      "真赭","#c76968", "丁子茶","#826858", "草色","#6d8346", "绀蓝","#494e8f", "今样色","#bb505d",
+      "黄栌","#64492b", "柳色","#78a355", "藤色","#afb4db", "梅染","#987165", "土器色","#ae6642",
+      "若草色 ","#abc88b", "藤紫","#9b95c9", "退红色","#ac6767", "黄枯茶","#56452d", "松叶色","#74905d",
+      "青紫","#6950a1", "苏芳","#973c3f", "狐色","#96582a", "白绿","#cde6c7", "董色","#6f60aa",
+      "茜色","#b22c46", "黄橡","#705628", "薄绿","#1d953f", "鸠羽色","#867892", "红","#a7324a",
+      "银煤竹","#4a3113", "千草色","#77ac98", "薄色","#918597", "银朱","#aa363d", "涅色","#412f1f",
+      "青绿","#007d65", "薄鼠","#6f6d85", "赤","#ed1941", "胡桃色","#845538", "浅绿","#84bf96",
+      "鸠羽鼠","#594c6d", "朱色","#f26522", "香色","#8e7437", "緑","#45b97c", "菖蒲色","#694d9f",
+      "洗朱","#d2553d", "国防色","#69541b", "草色 ","#225a1f", "江户紫","#6f599c", "红桦色","#b4534b",
+      "练色","#d5c59f", "木贼色","#367459", "紫","#8552a1", "红绯","#ef4136", "肉色","#cd9a5b",
+      "常磐色","#007947", "灭紫","#543044", "桦色","#c63c26", "人色","#cd9a5b", "绿青色","#40835e",
+      "葡萄鼠","#63434f", "铅丹色","#f3715c", "土色","#b36d41", "千歳緑","#2b6447", "古代紫","#7d5886",
+      "赭","#a7573b", "小麦色","#df9464", "深绿","#005831", "暗红","#401c44", "绯色","#aa2116",
+      "琥珀色","#b76f40", "萌葱色","#006c54", "葡萄","#472d56", "丹","#b64533", "木兰色","#ad8b3d",
+      "青白橡","#375830", "茄子绀","#45224a", "土","#b54334", "栀子色","#dea32c", "革色","#274d3d",
+      "紫绀","#411445", "焦香","#853f04", "朽叶","#d1923f", "麴尘","#375830", "浓色","#4b2f3d",
+      "真红","#840228", "萱草色","#c88400", "仙斋茶","#27342b", "二蓝","#402e4c", "绯","#7a1723",
+      "黄金","#c37e00", "若竹色","#65c294", "菖蒲色 ","#c77eb5", "红海老茶","#a03939", "金色","#c37e00",
+      "青磁色","#73b9a2", "牡丹色","#ea66a6", "浅苏芳","#8a2e3b", "金茶","#e0861a", "青竹色","#72baa7",
+      "赤紫","#f173ac", "鸢色","#8e453f", "卵色","#ffce7b", "铁色","#005344", "白","#fffffb",
+      "小豆色","#8f4b4a", "山吹色","#fcaf17", "锖鼠","#122e29", "胡粉色","#fffef9", "弁柄色","#892f1b",
+      "黄土色","#ba8448", "铁御纳户","#293047", "生成色","#f6f5ec", "栗梅","#6b2c25", "朽叶色","#896a45",
+      "青绿 ","#00ae9d", "灰白","#d9d6c3", "海老茶","#733a31", "五倍子色","#76624c", "锖浅葱","#508a88",
+      "石竹色","#d1c7b7", "深绯","#54211d", "莺茶","#6d5826", "水浅葱","#70a19f", "象牙色","#f2eada",
+      "赤铜色","#78331e", "向日葵色","#ffc20e", "新桥色","#50b7c1", "乳白色","#d3d7d4", "赤褐色","#53261f",
+      "郁金色","#fdb933", "浅葱色","#00a6ac", "薄钝","#999d9c", "金赤","#f15a22", "砂色","#d3c6a6",
+      "白群","#78cdd1", "银鼠","#a1a3a6", "赤茶","#b4533c", "芥子色","#c7a252", "御纳戸色","#008792",
+      "茶鼠","#9d9087", "赤锖色","#84331f", "淡黄","#dec674", "瓮视","#94d6da", "鼠色","#8a8c8e",
+      "黄丹","#f47a55", "亚麻色","#b69968", "水色","#afdfe4", "薄墨色","#74787c", "赤橙","#f15a22",
+      "枯色","#c1a173", "蓝鼠","#5e7c85", "利休鼠","#7c8577", "柿色","#f3704b", "鸟子色","#dbce8f",
+      "秘色","#76becc", "铅色","#72777b", "肉桂色","#da765b", "黄色","#ffd400", "空色","#90d7ec",
+      "灰色","#77787b", "桦色 ","#c85d44", "蒲公英色","#ffd400", "青 ","#009ad6", "钝色","#4f5555",
+      "炼瓦色","#ae5039", "中黄","#ffe600", "蓝色","#145b7d", "煤竹色","#6c4c49", "锖色","#6a3427",
+      "刈安色","#f0dc70", "浓蓝","#11264f", "黑茶","#563624", "桂皮色","#8f4b38", "黄檗色","#fcf16e",
+      "勿忘草色","#7bbfea", "黑橡","#3e4145", "栗色","#8e3e1f", "绿黄色","#decb00", "露草色","#33a3dc",
+      "浓鼠","#3c3645", "黄赤","#f36c21", "鶸色","#cbc547", "缥色","#228fbd", "墨","#464547",
+      "代赭","#b4532a", "海松色","#6e6b41", "浅缥","#2468a2", "黑","#130c0e", "骆驼色","#b7704f",
+      "鶸茶","#596032", "薄缥","#2570a1", "黑铁","#281f1d", "黄茶","#de773f", "山鸠色","#525f42",
+      "薄花色","#2585a6", "蜡色","#2f271d", "洗柿","#c99979", "生壁色","#5f5d46", "绀青","#1b315e",
+      "紫黑","#1d1626"
+    ];
+
+    const COLOR_3 = [
+      "aliceblue", "antiquewhite", "aqua", "aquamarine", "azure", "beige", "bisque", "black",
+      "blanchedalmond", "blue", "blueviolet", "brown", "burlywood", "cadetblue", "chartreuse", "chocolate",
+      "coral", "cornflowerblue", "cornsilk", "crimson", "cyan", "darkblue", "darkcyan", "darkgoldenrod",
+      "darkgray", "darkgreen", "darkkhaki", "darkmagenta", "darkolivegreen", "darkorange", "darkorchid", "darkred",
+      "darksalm", "darkseagreen", "darkslateblue", "darkslategray", "darkturquoise", "darkviolet", "deeppink", "deepskyblue",
+      "dimgay", "dodgerblue", "firebrick", "floralwhite", "forestgreen", "fuchsia", "gainsbora", "ghostwhite",
+      "gold", "goldenrod", "gray", "green", "greenyellow", "honeydew", "hotpink", "indianred",
+      "indigo", "ivory", "khaki", "lavender", "lavenderblush", "lawngreen", "lemonchiffon", "lightblue",
+      "lightcoral", "lightcyan", "lightgoldenrodyellow", "lightgreen", "lightgrey", "lightpink", "lightsalmon", "lightseagreen",
+      "lightskyblue", "lightslategray", "lightsteelblue", "lightyellow", "lime", "limegreen", "linen", "magenta",
+      "maroon", "mediumaquamarine", "mediumblue", "mediumorchid", "mediumpurple", "mediumseagreen", "mediumslateblue", "mediumspringgreen",
+      "mediumturquoise", "mediumvioletred", "mediumnightblue", "mintcream", "mistyrose", "moccasin", "navajowhite", "navy",
+      "oldlace", "olive", "olivedrab", "orange", "orangered", "orchid", "palegoldenrod", "palegreen",
+      "paleturquoise", "palevioletred", "papayawhip", "peachpuff", "peru", "pink", "plum", "powderblue",
+      "purple", "red", "rosybrown", "royalblue", "saddlebrown", "salmon", "sandybrown", "seagreen",
+      "seashell", "sienna", "silver", "skyblue", "slateblue", "slategray", "snow", "springgreen",
+      "steelblue", "tan", "teal", "thistle", "tomato", "turquoise", "violet", "wheat",
+      "white", "whitesmoke", "yellow", "yellowgreen",
+    ];
+
+
+    buildList(COLOR_1, 7, document.querySelector("#list-1"));
+    buildList(COLOR_2, 8, document.querySelector("#list-2"));
+    buildSafeList(6, document.querySelector("#list-3"));
+    buildList(COLOR_3, 5, document.querySelector("#list-4"), false);
+
+
+
+    function buildList(colors, col, container, isPair = true) {
+      let frag = colors.reduce((frag, v, i, a) => {
+        if (isPair && i % 2 > 0) {
+          return frag;
+        } else {
+          let div = document.createElement("div");
+          let c = div.style.backgroundColor = div.dataset.color = a[i + Number(isPair)];
+          if (isDark(c)) {
+            div.classList.add("liulinwj-list-white-item");
+          }
+          div.innerText = v;
+          frag.appendChild(div);
+        }
+        return frag;
+      }, document.createDocumentFragment());
+      padGrid(frag, colors.length / (isPair ? 2 : 1), col);
+      container.appendChild(frag);
+    }
+
+
+    function buildSafeList(col, container) {
+      let frag = document.createDocumentFragment()
+      for (let i = 0; i < 6; i++) {
+        let x = (i * 3).toString(16);
+        for (let j = 0; j < 6; j++) {
+          let y = (j * 3).toString(16);
+          for (let k = 0; k < 6; k++) {
+            let z = (k * 3).toString(16);
+            let div = document.createElement("div");
+            let c = "#" + x + x + y + y + z + z;
+            div.style.backgroundColor = div.dataset.color = div.innerText = c;
+            if (isDark(c)) {
+              div.classList.add("liulinwj-list-white-item");
+            }
+            frag.appendChild(div);
+          }
+        }
+      }
+      padGrid(frag, 6 ** 3, col);
+      container.appendChild(frag);
+    }
+
+    
+    function isDark(color) {
+      if (color.startsWith("#")) {
+        let b1 = Number.parseInt(color.substring(1, 3), 16);
+        let b2 = Number.parseInt(color.substring(3, 5), 16);
+        let b3 = Number.parseInt(color.substring(5), 16);
+        if (b2 > 0xdd) {
+          return false;
+        }
+        return ((b1 <= 0x60) + (b2 <= 0x60) + (b3 <= 0x60) >= 2);
+      }
+      return color === "darkgreen" || color === "darkblue" || color === "mediumblue" || color === "darkslategray"
+          || color === "brown"     || color === "darkred"  || color === "firebrick"  || color === "maroon"
+          || color === "black"     || color === "navy"     || color === "indigo";
+    }
+
+
+    function padGrid(frag, count, col) {
+      let mod = count % col;
+      for (let i = 0, len = mod ? col - mod : 0; i < len; i++) {
+        let div = document.createElement("div");
+        div.style.backgroundColor = "#ffffff";
+        frag.appendChild(div);
+      }
+    }
+
+  </script>
+</body>
+</html>
