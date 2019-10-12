@@ -9,19 +9,27 @@
   <title>HTML Color</title>
   <style>
     body {
+      margin-bottom: 30px;
       font-size: 14px;
-      background-color: #bbbdc5;
       user-select: none;
     }
+
     .liulinwj-color-container {
       display: flex;
       flex-direction: column;
       max-width: 720px;
       margin: auto;
     }
+
     .liulinwj-color-title {
       margin-left: 10px;
     }
+    .liulinwj-color-title span {
+      font-size: .7em;
+      font-weight: normal;
+    }
+
+
     .liulinwj-color-classfication {
       display: flex;
       flex-direction: row-reverse;
@@ -30,10 +38,10 @@
     }
     .liulinwj-color-classfication > * {
       position: relative;
-      width: 150px;
+      width: 155px;
       height: 28px;
       padding: 15px 0 0 15px;
-      color: blue;
+      color: #777777;
       font-size: 1.2em;
       font-weight: bold;
       cursor: pointer;
@@ -72,7 +80,7 @@
     }
     
     .liulinwj-color-classfication > .active {
-      color: #444444;
+      color: #333333;
       cursor: default;
     }
 
@@ -123,6 +131,12 @@
       left: -100px;
     }
 
+    .liulinwj-copy {
+      margin-top: 25px;
+      text-align: center;
+      font-weight: bold;
+    }
+
     .copied {
       position: absolute;
       animation: flyAway 1300ms ease-in 0ms 1 alternate forwards;
@@ -143,17 +157,42 @@
         opacity: 0;
       }
     }
+
+    .liulinwj-color-form {
+      display: flex;
+      align-self: flex-end;
+      height: 40px;
+    }
+    .liulinwj-color-form > select {
+      width: 170px;
+      height: 32px;
+      border: 1px solid #ccdddd;
+    }
   </style>
 </head>
 <body>
 
   <div class="liulinwj-color-container">
-    <h2 class="liulinwj-color-title">Color Copier —— Only by click</h2>
+    <h1 class="liulinwj-color-title">HTML Color Copier <span>—— Only by click</span></h1>
     <div class="liulinwj-color-form">
-
+      <select id="color-model" class="js-param" data-key="model">
+        <option value="hex">Hex</option>
+        <option value="hex0">Hex without #</option>
+        <option value="short">Hex Short</option>
+        <option value="short0">Hex Short without #</option>
+        <option value="rgb">RGB</option>
+        <option value="percent">RGB Percent</option>
+        <option value="hsl">HSL</option>
+        <option value="original">Original</option>
+      </select>
+      <select id="color-case" class="js-param" data-key="case">
+        <option value="lowercase">Lowercase</option>
+        <option value="uppercase">Uppercase</option>
+        <option value="captital">Capital (only CSS names)</option>
+      </select>
     </div>
     <div class="liulinwj-color-classfication">
-      <div class="js-tag" data-key="4">CSS Color Name</div>
+      <div class="js-tag" data-key="4">CSS Color Names</div>
       <div class="js-tag" data-key="3">Safe Color Disk</div>
       <div class="js-tag" data-key="2">Color Names 2</div>
       <div class="js-tag active" data-key="1">Color Names 1</div>
@@ -162,10 +201,90 @@
     <div id="list-2" class="liulinwj-color-list js-list"></div>
     <div id="list-3" class="liulinwj-color-list js-list"></div>
     <div id="list-4" class="liulinwj-color-list js-list"></div>
+    <div class="liulinwj-copy">&copy;Liulinwj</div>
   </div>
   <input type="text" id="code">
 
   <script>
+
+    let param = {
+      model: "hex",
+      case: "lowercase",
+      transparent: 1,
+    };
+    for (let sel of document.querySelectorAll(".js-param")) {
+      sel.addEventListener("change", function(e) {
+        let k = this.dataset.key;
+        if (!(k in param)) {
+          return;
+        }
+        param[k] = this.value;
+      });
+    }
+
+    function convertColorModel(color) {
+      let tmp;
+      let model = param.model;
+      let c = color;
+
+      if (model === "original") {
+        return c.startsWith("#") ? c : c;
+      }
+
+      if (model === "hex") {
+        return c;
+      }
+      if (model === "hex0") {
+        return c.replace(/^#/, "");
+      }
+
+      if ((tmp = model === "short") || model === "short0") {
+        if (c[1] === c[2] && c[3] === c[4] && c[5] === c[6]) {
+          c = c[1] + c[3] + c[5];
+        }
+        return tmp ? c : c.substring(1);
+      }
+
+      let [r, g, b] = [c.substring(1, 3), c.substring(3, 5), c.substring(5)].map(v => Number.parseInt(v, 16));
+
+      if (model === "rgb") {
+        return `rgb(${r}, ${g}, ${b})`;
+      }
+
+      if (model === "percent") {
+        return `rgb(${r * 100 / 0xff}%, ${g * 100 / 0xff}%, ${b * 100 / 0xff}%)`;
+      }
+
+      if (model === "hsl") {
+        let max = Math.max(r, g, b);
+        let min = Math.min(r, g, b);
+        let h, l, s;
+        if (max === r) {
+          h = 60 * (g - b) / (max - min) + (g >= b ? 0 : 360);
+        } else if (max === g) {
+          h = 60 * (b - r) / (max - min) + 120;
+        } else {
+          h = 60 * (r - g) / (max - min) + 240;
+        }
+        l = (max + min) * 100 / 255 / 2;
+        s = max === 0 ? 0 : (100 - min * 100 / max);
+        return `hsl(${h}, ${s}%, ${l}%)`;
+      }
+      return "";
+    }
+
+    function convert(color) {
+      let c = convertColorModel(color);
+      let caze = param.case;
+      if (caze === "capital") {
+        if (param.model !== "original") {
+          return c;
+        }
+        return c.substring(0, 1).toUpperCase() + c.substring(1).toLowerCase();
+      }
+      return caze === "uppercase" ? c.toUpperCase() : c.toLowerCase();
+    }
+
 
     for (let dom of document.querySelectorAll(".js-tag")) {
       dom.addEventListener("click", function(e) {
@@ -204,12 +323,11 @@
           return;
         }
         if (target.parentElement.classList.contains("js-list")) {
-          var x = target.style.backgroundColor;
-          var code = document.querySelector("#code");
-          code.value = color;
+          let code = document.querySelector("#code");
+          code.value = convert(color);
           code.select();
           document.execCommand("copy");
-          flyAway(e.clientX, e.clientY);
+          flyAway(e.clientX, e.clientY)
         }
       });
     }
@@ -409,7 +527,7 @@
       let mod = count % col;
       for (let i = 0, len = mod ? col - mod : 0; i < len; i++) {
         let div = document.createElement("div");
-        div.style.backgroundColor = "#ffffff";
+        div.style.backgroundColor = "#cccccc";
         frag.appendChild(div);
       }
     }
