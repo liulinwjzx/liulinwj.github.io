@@ -150,6 +150,7 @@
 
     .liulinwj-copied {
       position: absolute;
+      z-index: 999999999;
       animation: fly-away 1300ms ease-in 0ms 1 alternate forwards;
     }
     .liulinwj-copied::before {
@@ -159,12 +160,10 @@
 
     @keyframes fly-away {
       95% {
-        z-index: 999;
       }
       to {
         top: -300px;
         display: none;
-        z-index: -99999;
         opacity: 0;
       }
     }
@@ -479,9 +478,6 @@
           }
           return ((b1 <= 0x60) + (b2 <= 0x60) + (b3 <= 0x60) >= 2);
         }
-        return color === "darkgreen" || color === "darkblue" || color === "mediumblue" || color === "darkslategray"
-            || color === "brown"     || color === "darkred"  || color === "firebrick"  || color === "maroon"
-            || color === "black"     || color === "navy"     || color === "indigo";
       }
 
 
