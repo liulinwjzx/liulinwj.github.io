@@ -14,37 +14,39 @@
       color: #0000ee;
       text-decoration: none;
     }
-
     a:hover {
       text-decoration: underline;
+    }
+
+    .liulinwj-badge-container {
+      max-width: 800px;
+      margin: auto;
     }
 
     .liulinwj-badge-title {
       margin-left: 50px;
     }
 
-    .liulinwj-badge-show {
+    .liulinwj-badge-showarea {
       height: 40px;
       margin-left: 80px;
     }
-
-    .liulinwj-badge-img-container {
-      display: inline-grid;
-      grid-template-columns: auto auto;
+    .liulinwj-badge-showarea > * {
+      display: flex;
     }
 
-    .liulinwj-badge-btn-container {
+    .liulinwj-badge-btn {
       display: grid;
       align-items: stretch;
       height: auto;
       margin-left: 10px;
     }
 
-    .liulinwj-badge-btn {
+    .liulinwj-badge-btn button {
       width: 80px;
       height: auto;
       border: 1px solid #ccdddd;
-      border-radius: 5px;
+      border-radius: 3px;
       cursor: pointer;
     }
 
@@ -54,6 +56,7 @@
       left: -100px;
     }
 
+
     .liulinwj-badge-form {
       display: grid;
       grid-template-columns: 130px auto;
@@ -61,11 +64,16 @@
       align-items: center;
     }
 
+    .liulinwj-badge-label,
+    .liulinwj-badge-label + input,
+    .liulinwj-badge-label + select {
+      box-sizing: border-box;
+      height: 35px;
+    }
+
     .liulinwj-badge-label {
       justify-self: stretch;
       text-align: right;
-      box-sizing: border-box;
-      height: 35px;
       padding: 8px 8px 0 0;
       border: 1px solid #ccdddd;
       border-right: none;
@@ -73,105 +81,110 @@
       background-color: #cccccc;
     }
 
-    .liulinwj-badge-required::after {
-      float: right;
-      padding-left: 3px;
-      content: "*";
-      color: #cc0000;
-      font-size: 18px;
-    }
-
-    .liulinwj-badge-form input,
-    .liulinwj-badge-form select {
-      box-sizing: border-box;
+    .liulinwj-badge-label + input,
+    .liulinwj-badge-label + select {
       width: 100%;
-      height: 35px;
       padding: 2px 5px;
       border: 1px solid #ccdddd;
     }
+    .liulinwj-badge-label + input {
+      padding-left: 9px;
+    }
 
-    .liulinwj-badge-dest {
+    .liulinwj-badge-label-required::after {
+      content: "*";
+      float: right;
+      padding-left: 3px;
+      color: #dd0000;
+      font-size: 20px;
+    }
+
+
+    .liulinwj-badge-note {
+      grid-column: 1 / span 2;
       justify-self: left;
       margin-left: 80px;
-      grid-column: 1 / span 2;
       padding-top: 20px;
     }
 
-    #copyright {
+    .liulinwj-badge-copyright {
       text-align: center;
       font-weight: bold;
     }
 
-    @media (max-width: 480px) {
-      .liulinwj-badge-show {
-        margin-left: 40px;
+    @media (max-width: 680px) {
+      .liulinwj-badge-showarea {
+        margin-left: 60px;
       }
 
-      .liulinwj-badge-dest {
-        margin-left: 40px;
+      .liulinwj-badge-note {
+        margin-left: 10px;
       }
     }
   </style>
 </head>
 
 <body>
-  <h2 class="liulinwj-badge-title">Shiels.io Generator</h2>
+  <div class="liulinwj-badge-container">
+    
+    <h2 class="liulinwj-badge-title">Shiels.io Badge Generator</h2>
 
-  <div class="liulinwj-badge-show">
-    <div class="liulinwj-badge-img-container">
-      <img id="badge" style="width: auto;">
-      <div class="liulinwj-badge-btn-container">
-        <input type="button" class="liulinwj-badge-btn js-copy" value="Copy">
+    <div class="liulinwj-badge-showarea">
+      <div>
+        <img id="badge">
+        <div class="liulinwj-badge-btn">
+          <button type="button" class="js-copy">Copy</button>
+        </div>
+        <input type="text" class="liulinwj-badge-src">
       </div>
-      <input type="text" class="liulinwj-badge-src">
-    </div>
-  </div>
-
-  <div class="liulinwj-badge-form">
-    <div class="liulinwj-badge-label">Label</div>
-    <input type="text" class="js-badge-data" data-key="label" value="Blog" placeholder="Optional">
-
-    <div class="liulinwj-badge-label">Label Color</div>
-    <input type="text" class="js-badge-data" data-key="labelColor" placeholder="HEX (no # sign), RGB, RGBA, HSL, HSLA or CSS named colors">
-
-    <div class="liulinwj-badge-label liulinwj-badge-required">Message</div>
-    <input type="text" class="js-badge-data" data-key="message" value="@Liulinwj">
-
-    <div class="liulinwj-badge-label liulinwj-badge-required">Message Color</div>
-    <input type="text" class="js-badge-data" data-key="messageColor"
-      placeholder="HEX (no # sign), RGB, RGBA, HSL, HSLA or CSS named colors">
-
-    <div class="liulinwj-badge-label">Style</div>
-    <select class="js-badge-data" data-key="style">
-      <option value="">flat</option>
-      <option value="flat-square">flat-square</option>
-      <option value="plastic">plastic</option>
-      <option value="for-the-badge">for-the-badge</option>
-      <option value="social">social</option>
-    </select>
-
-    <div class="liulinwj-badge-label">Logo</div>
-    <input type="text" class="js-badge-data" data-key="logo" placeholder="data url, simple-icons or (bitcoin, dependabot, discord, gitlab, npm, paypal, serverfault, stackexchange, superuser, telegram, travis)">
-
-    <div class="liulinwj-badge-label">logoColor</div>
-    <input type="text" class="js-badge-data" data-key="logoColor"
-      placeholder="HEX (no # sign), RGB, RGBA, HSL, HSLA or CSS named colors">
-
-    <div class="liulinwj-badge-label">logoWidth</div>
-    <input type="text" class="js-badge-data" data-key="logoWidth" placeholder="Non negative number">
-
-    <div class="liulinwj-badge-label">Link</div>
-    <input type="text" class="js-badge-data" data-key="link" placeholder="Obseleted in svg standard now">
-
-    <div class="liulinwj-badge-dest">
-      <p><b>Logo</b>: data url, <a href="https://simpleicons.org/" target="_blank">simple-icons</a> or (bitcoin,
-        dependabot, discord, gitlab, npm, paypal, serverfault, stackexchange, superuser, telegram, travis). Icons of
-        last part is colorful, so "logoColor" will not function if chosen. </p>
-      <p>This page is a shortcut for <a href="https://shields.io/" target="_blank">Shield.io</a> who generates badge svg
-        repsponses. Thanks.</p>
-      <p id="copyright">@Liulinwj</p>
     </div>
 
+    <div class="liulinwj-badge-form">
+      <div class="liulinwj-badge-label">Label</div>
+      <input type="text" class="js-badge-data" data-key="label" value="Blog" placeholder="Optional">
+
+      <div class="liulinwj-badge-label">Label Color</div>
+      <input type="text" class="js-badge-data" data-key="labelColor" placeholder="HEX (no # sign), RGB, RGBA, HSL, HSLA or CSS named colors">
+
+      <div class="liulinwj-badge-label liulinwj-badge-label-required">Message</div>
+      <input type="text" class="js-badge-data" data-key="message" value="@Liulinwj">
+
+      <div class="liulinwj-badge-label liulinwj-badge-label-required">Message Color</div>
+      <input type="text" class="js-badge-data" data-key="messageColor"
+        placeholder="HEX (no # sign), RGB, RGBA, HSL, HSLA or CSS named colors">
+
+      <div class="liulinwj-badge-label">Style</div>
+      <select class="js-badge-data" data-key="style">
+        <option value="">flat</option>
+        <option value="flat-square">flat-square</option>
+        <option value="plastic">plastic</option>
+        <option value="for-the-badge">for-the-badge</option>
+        <option value="social">social</option>
+      </select>
+
+      <div class="liulinwj-badge-label">Logo</div>
+      <input type="text" class="js-badge-data" data-key="logo" placeholder="data url, simple-icons or (bitcoin, dependabot, discord, gitlab, npm, paypal, serverfault, stackexchange, superuser, telegram, travis)">
+
+      <div class="liulinwj-badge-label">logoColor</div>
+      <input type="text" class="js-badge-data" data-key="logoColor"
+        placeholder="HEX (no # sign), RGB, RGBA, HSL, HSLA or CSS named colors">
+
+      <div class="liulinwj-badge-label">logoWidth</div>
+      <input type="text" class="js-badge-data" data-key="logoWidth" placeholder="Non negative number">
+
+      <div class="liulinwj-badge-label">Link</div>
+      <input type="text" class="js-badge-data" data-key="link" placeholder="Obseleted in svg standard now">
+
+      <div class="liulinwj-badge-note">
+        <p><b>Logo</b>: data url, <a href="https://simpleicons.org/" target="_blank">simple-icons</a> or (bitcoin,
+          dependabot, discord, gitlab, npm, paypal, serverfault, stackexchange, superuser, telegram, travis). Icons of
+          last part is colorful, so "logoColor" will not function if chosen. </p>
+        <p>This page is a shortcut for <a href="https://shields.io/" target="_blank">Shield.io</a> who generates badge svg
+          repsponses. Thanks.</p>
+        <p class="liulinwj-badge-copyright">@Liulinwj</p>
+      </div>
+    </div>
+    
   </div>
 
   <script>
@@ -180,10 +193,11 @@
       const obj = {
         message: "@Liulinwj",
         messageColor: "brightgreen",
-      };
-
-      const proxy = new Proxy(obj, {
-        set(o, k, dom) {
+        input(dom) {
+          let k = dom.dataset.key;
+          if (!k) {
+            return;
+          }
           let v = dom.value.trim();
           let isValid = true;
           switch (k) {
@@ -210,44 +224,44 @@
               return false;
           }
           if (!isValid) {
-            v = Reflect.get(o, k);
+            v = Reflect.get(this, k);
           }
           if (!v) {
-            Reflect.deleteProperty(o, k);
+            Reflect.deleteProperty(this, k);
           } else {
-            Reflect.set(o, k, v);
+            Reflect.set(this, k, v);
           }
           dom.value = v || "";
           setBadge();
-        }
-      });
+        },
+      };
 
       setBadge();
 
-
       for (let v of document.querySelectorAll(".js-badge-data")) {
-        v.value = proxy[v.dataset.key] || "";
-        v.addEventListener("change", function (e) {
-          proxy[this.dataset.key] = this;
+        v.value = obj[v.dataset.key] || "";
+        v.addEventListener("change", function(e) {
+          obj.input(this);
         });
-        v.addEventListener("keyup", function (e) {
+        v.addEventListener("keyup", function(e) {
           if (e.keyCode === 13) {
-            proxy[this.dataset.key] = this;
+            obj.input(this);
           }
         });
       }
 
+      
       let locked = false;
-      document.querySelector(".js-copy").addEventListener("click", function (e) {
+      document.querySelector(".js-copy").addEventListener("click", function(e) {
         if (locked) {
           return;
         }
         document.querySelector(".liulinwj-badge-src").select();
         let success = document.execCommand("copy");
         locked = true;
-        this.value = success ? "Copied..." : "Failed...";
+        this.innerHTML = success ? "Copied..." : "Failed...";
         setTimeout(() => {
-          this.value = "Copy";
+          this.innerHTML = "Copy";
           locked = false;
         }, 1000);
       });
@@ -276,22 +290,22 @@
       }
 
       function setBadge() {
-        let lable = proxy.label ? proxy.label + "-" : "";
-        let url = `https://img.shields.io/badge/${lable}${proxy.message}-${obj.messageColor}`;
-        let query = Object.keys(proxy)
+        let lable = obj.label ? obj.label + "-" : "";
+        let url = `https://img.shields.io/badge/${lable}${obj.message}-${obj.messageColor}`;
+        let query = Object.keys(obj)
           .filter(v => {
             if (v === "label" || v === "message" || v === "messageColor") {
               return false;
             }
-            if (v === "labelColor" && !proxy.label) {
+            if (v === "labelColor" && !obj.label) {
               return false;
             }
-            if ((v === "logoColor" || v === "logWidth") && !proxy.logo) {
+            if ((v === "logoColor" || v === "logWidth") && !obj.logo) {
               return false;
             }
             return true;
           })
-          .map(v => v + "=" + encodeURIComponent(proxy[v]))
+          .map(v => v + "=" + encodeURIComponent(obj[v]))
           .join("&");
         url += query ? "?" + query : ""
         document.getElementById("badge").src = url;

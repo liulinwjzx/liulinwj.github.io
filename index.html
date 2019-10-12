@@ -9,103 +9,182 @@
     body {
       display: flex;
       flex-direction: column;
-      justify-content: stretch;
+      overflow: hidden;
       width: 100vw;
       height: 100vh;
-      overflow: hidden;
       margin: 0;
     }
+
     .liulinwj-header {
-      padding: 10px 10px 10px 50px;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      background-color: #d3d7d4;
+      padding: 10px 10px 10px 50px;
+      background-color: #ffffff;
     }
-    .liulinwj-sign {
+    .liulinwj-header-sign {
       font-size: 35px;
       font-weight: bold;
     }
-    .liulinwj-desc {
-      margin-top: 6px;
-      margin-left: 40px;
+    .liulinwj-header-desc {
       display: grid;
       grid-template-columns: 70px auto;
+      margin: 6px 0 0 40px;
       font-size: 18px;
     }
-    .liulinwj-desc-dash {
-      width:90%;
+    .liulinwj-header-desc-dash {
+      width: 90%;
       height: 0;
       border: none;
       border-top: 2px solid #000000;
       border-radius: 1px;
     }
-    .liulinwj-footer {
-      height: 50px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: inherited;
-      background-color: #d3d7d4;
-    }
-    .liulinwj-msg-board {
-      align-self: flex-end;
-      padding-right: 20px;
-      animation: fade 3s linear 3s infinite alternate;;
-    }
+    
     .liulinwj-body {
-      flex-grow: 1;
       display: flex;
+      flex-grow: 1;
     }
     .liulinwj-navigator {
+      flex-shrink: 3;
       width: 300px;
-      border-right: 1px solid #999999;
+      max-width: 25vw;
+      padding: 25px 0 15px 15px;
+      border-right: 1px solid #eeeeee;
+      background-color: #ffffff;
+    }
+    .liulinwj-frame {
+      flex-grow: 1;
+      flex-shrink: 1;
+      border: none;
     }
     .liulinwj-attach {
       display: none;
       width: 100px;
     }
-    #iframe {
-      flex-grow: 1;
-      border: none;
+
+    .liulinwj-footer {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 50px;
+      background-color: #d3d7d4;
+    }
+    .liulinwj-footer-message {
+      align-self: flex-end;
+      padding-right: 20px;
+      animation: fade 3s linear 3s infinite alternate;
     }
 
     @keyframes fade {
       from { opacity: 1; }
       to { opacity: 0; }
     }
+
+
+    .liulinwj-phone-menu {
+      display: none;
+      width: 25px;
+      height: 25px;
+      fill: #222222;
+      cursor: pointer;
+    }
+    
+    @media screen and (max-width: 768px) {
+      .liulinwj-header-desc {
+        display: none;
+      }
+      .liulinwj-navigator {
+        position: fixed;
+        z-index: 9999;
+        left : -70vw;
+        width: 100%;
+        max-width: 60vw;
+        height: 100vh;
+      }
+      .liulinwj-navigator-slide-right {
+        animation: slide-right-right 300ms linear 0ms 1 alternate;
+        animation-fill-mode: forwards;
+      }
+      .liulinwj-navigator-slide-left {
+        animation: slide-right-left 300ms linear 0ms 1 alternate;
+        animation-fill-mode: forwards;
+      }
+
+      .liulinwj-phone-menu-container {
+        position: absolute;
+        z-index: 99999;
+        left: 20px;
+        bottom: 10px;
+      }
+      .liulinwj-phone-menu {
+        display: block;
+      }
+
+      @keyframes slide-right-right {
+        from { left: -350px; }
+        to { left: 0; }
+      }
+
+      @keyframes slide-right-left {
+        from { left: 0; }
+        to { left: -350px; }
+      }
+    }
+    
+
   </style>
 </head>
 <body>
   <header class="liulinwj-header">
-    <div class="liulinwj-sign">Liulinwj</div>
-    <div class="liulinwj-desc">
-      <hr class="liulinwj-desc-dash">
-      <div class="liulinwj-desc-text">Like art of codes, like art of musical notes, like art of lights and shades, like art of natural objects.</div>
+    <div class="liulinwj-header-sign">Liulinwj</div>
+    <div class="liulinwj-header-desc">
+      <hr class="liulinwj-header-desc-dash">
+      <div>Like art of codes, like art of musical notes, like art of lights and shades, like art of natural objects.</div>
     </div>
   </header>
   <div class="liulinwj-body">
-    <div class="liulinwj-navigator"></div>
-    <iframe id="iframe"></iframe>
+    <div class="liulinwj-navigator js_navigator">
+    </div>
+    <iframe id="iframe" class="liulinwj-frame"></iframe>
     <div class="liulinwj-attach"></div>
   </div>
   <footer class="liulinwj-footer">
     <div>Designed & Powerd by &copy;Liulinwj</div>
-    <div class="liulinwj-msg-board">It's me, past, now, and forever.</div>
+    <div class="liulinwj-footer-message">It's me, past, now, and forever.</div>
   </footer>
+  <div class="liulinwj-phone-menu-container">
+    <svg class="liulinwj-phone-menu js-menu" viewBox="0 0 1433 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="279.8828125" height="200"><path d="M1433.6 102.4a102.4 102.4 0 0 1-102.4 102.4H102.4a102.4 102.4 0 0 1 0-204.8h1228.8a102.4 102.4 0 0 1 102.4 102.4z m0 409.6a102.4 102.4 0 0 1-102.4 102.4H102.4a102.4 102.4 0 0 1 0-204.8h1228.8a102.4 102.4 0 0 1 102.4 102.4z m0 409.6a102.4 102.4 0 0 1-102.4 102.4H102.4a102.4 102.4 0 0 1 0-204.8h1228.8a102.4 102.4 0 0 1 102.4 102.4z" p-id="2481"></path></svg>
+  </div>
 </body>
 <script>
   (function() {
-    const query = location.search;
-    let subpage = query.replace(/[\?&]a=(.+)[^\?&]?/, "$1");
-    try {
-      subpage = decodeURIComponent(subpage);
-    } catch(err) {
-    }
+    const query = location.search.replace(/^\?/, "").split("&")
+      .reduce((o, v) => {
+        let [key, value] = v.split("=");
+        try {
+          o[key] = decodeURIComponent(value);
+        } catch(err) {
+        }
+        return o;
+      }, {});
+    let subpage = query.a;
     if (subpage) {
       window.frames.iframe.src = subpage;
     }
+
+    var menuShowed = false;
+
+    document.querySelector(".js-menu").addEventListener("click", function(e) {
+      let [add, remove] = ["liulinwj-navigator-slide-right", "liulinwj-navigator-slide-left"];
+      let classList = document.querySelector(".liulinwj-navigator").classList;
+      if (menuShowed = classList.contains(add)) {
+        [add, remove] = [remove, add];
+      }
+      classList.remove(remove);
+      classList.add(add);
+    });
+
   })();
 </script>
 </html>
