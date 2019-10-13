@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="author" content="Liulinwj">
+  <meta name="published" content="https://liulinwjzx.github.io">
+  <title>Base 64, 32 and 16 Encoder and Decoder</title>
+  <style>
+      a,
+      a:visited,
+      a:active,
+      a:hover {
+        color: #0000ee;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+
+    .liulinwj-basen-container {
+      display: flex;
+      flex-direction: column;
+      max-width: 720px;
+      margin: auto;
+    }
+
+    .liulinwj-basen-title {
+      align-self: center;
+      margin-left: 10px;
+    }
+
+    .liulinwj-basen-desc {
+      margin-left: 20px;
+    }
+    .liulinwj-basen-desc a {
+      font-style: italic;
+    }
+
+    .liulinwj-basen-form {
+      display: flex;
+      height: 400px;
+      margin: 15px 0;
+    }
+    .liulinwj-basen-input,
+    .liulinwj-basen-output {
+      height: 150px;
+      border: 1px solid #ccdddd;
+      resize: none;
+    }
+    .liulinwj-basen-operators {
+      display: flex;
+      justify-content: space-between;
+      min-width: 70px;
+    }
+
+    .liulinwj-basen-copyright {
+      align-self: center;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="liulinwj-basen-container">
+    <h2 class="liulinwj-basen-title">Base 64, 32 and 16 Encoder and Decoder</h2>
+    <textarea class="liulinwj-basen-input"></textarea>
+    <div class="liulinwj-basen-operators">
+      <select name="" id="">
+        <option value="base64">Base64</option>
+        <option value="base32">Base32</option>
+        <option value="base16">Base16</option>
+      </select>
+      <div class="liulinwj-basen-btns">
+        <button>Encode</button>
+        <button>Decode</button>
+      </div>
+      <div></div>
+    </div>
+    <textarea class="liulinwj-basen-output"></textarea>
+    <div class="liulinwj-basen-desc">
+      <p>BASE-N and UTF-8 packaged. All UTF-8 characters can be decoded and encoded.</p>
+      <p>Detail of method: <a href="https://www.rfc-editor.org/info/rfc4648" target="_blank">RFC 4648: The Base16, Base32, and Base64 Data Encodings</a>.</p>
+    </div>
+    <div class="liulinwj-basen-copyright">&copy;Liulinwj</div>
+  </div>
+
+
+  <script>
+    
+    /**
+     * Base64, 32 and 16 Encoder and Decoder.
+     * @author Liulinwj
+     * @published https://liulinwjzx.github.io
+     */
+    const BaseN = (function() {
+      let BASE64     = "base64";
+      let BASE64SAFE = "base64safe";
+      let BASE32     = "base32";
+      let BASE32EX   = "base32ex";
+      let BASE16     = "base16";
+      let result     = { BASE64, BASE64SAFE, BASE32, BASE32EX, BASE16 };
+
+      const CONFIG = {
+        [BASE64]: {
+          fromCharCount: 3,
+          toCharCount  : 4,
+          chars        : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
+          pad          : "=",
+          enc          : base64enc,
+          dec          : base64dec,
+        },
+        [BASE64SAFE]: {
+          fromCharCount: 3,
+          toCharCount  : 4,
+          chars        : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_",
+          pad          : "=",
+          enc          : base64enc,
+          dec          : base64dec,
+        },
+        [BASE32]: {
+          fromCharCount: 5,
+          toCharCount  : 8,
+          chars        : "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567",
+          pad          : "=",
+          enc          : base32enc,
+          dec          : base32dec,
+        },
+        [BASE32EX]: {
+          fromCharCount: 5,
+          toCharCount  : 8,
+          chars        : "0123456789ABCDEFGHIJKLMNOPQRSTUV",
+          pad          : "=",
+          enc          : base32enc,
+          dec          : base32dec,
+        },
+        [BASE16]: {
+          fromCharCount: 1,
+          toCharCount  : 2,
+          chars        : "0123456789ABCDEF",
+          enc          : base16enc,
+          dec          : base16dec,
+        },
+      };
+
+      Object.keys(CONFIG).forEach(k => {
+        let obj = CONFIG[k];
+        let map = [...obj.chars].reduce((map, v, i) => {
+          map[v] = i;
+          return map;
+        }, {});
+        obj.getIndex = function(s) {
+          if (s === this.pad) {
+            return s;
+          }
+          return s in map ? map[s] : -1;
+        };
+      });
+
+      function base64enc(c1, c2, c3) {
+        let d1, d2, d3, d4;
+        d1 = c1 >>> 2;
+        d2 = (c1 & 0b11) << 4;
+        d3 = d4 = -1;
+        if (Number.isFinite(c2)) {
+          d2 |= c2 >>> 4;
+          d3 = (c2 & 0b1111) << 2;
+        }
+        if (Number.isFinite(c3)) {
+          d3 |= c3 >>> 6;
+          d4 = c3 & 0b111111;
+        }
+        return [d1, d2, d3, d4];
+      }
+
+      function base64dec(d1, d2, d3, d4) {
+        let c1, c2, c3;
+        c1 = (d1 << 2) | (d2 >>> 4);
+        c2 = ((d2 & 0b1111) << 4);
+        if (d3 === this.pad) {
+          return [c1];
+        }
+        c2 |= (d3 >>> 2);
+        if (d4 === this.pad) {
+          return [c1, c2];
+        }
+        c3 = ((d3 & 0b11) << 6) | d4;
+        return [c1, c2, c3];
+      }
+
+      function base32enc(c1, c2, c3, c4, c5) {
+        let d1, d2, d3, d4, d5, d6, d7, d8;
+        d1 = c1 >>> 3;
+        d2 = (c1 & 0b111) << 2;
+        d3 = d4 = d5 = d6 = d7 = d8 = -1;
+        if (Number.isFinite(c2)) {
+          d2 |= c2 >>> 6;
+          d3 = (c2 & 0b111110) >>> 1;
+          d4 = (c2 & 0b1) << 4;
+        }
+        if (Number.isFinite(c3)) {
+          d4 |= c3 >>> 4;
+          d5 = (c3 & 0b1111) << 1;
+        }
+        if (Number.isFinite(c4)) {
+          d5 |= c4 >>> 7;
+          d6 = (c4 & 0b1111100) >> 2;
+          d7 = (c4 & 0b11) << 3;
+        }
+        if (Number.isFinite(c5)) {
+          d7 |= c5 >>> 5;
+          d8 = c5 & 0b11111;
+        }
+        return [d1, d2, d3, d4, d5, d6, d7, d8];
+      }
+
+      function base32dec(d1, d2, d3, d4, d5, d6, d7, d8) {
+        let c1, c2, c3, c4, c5;
+        c1 = (d1 << 3) | (d2 >>> 2);
+        if (d3 === this.pad) {
+          return [c1];
+        }
+        c2 = ((d2 & 0b11) << 6) | (d3 << 1) | (d4 >>> 4);
+        if (d5 === this.pad) {
+          return [c1, c2];
+        }
+        c3 = ((d4 & 0b1111) << 4) | (d5 >>> 1);
+        if (d6 === this.pad) {
+          return [c1, c2, c3];
+        }
+        c4 = ((d5 & 0b1) << 7) | (d6 << 2) | (d7 >>> 3);
+        if (d8 === this.pad) {
+          return [c1, c2, c3, c4];
+        }
+        c5 = ((d7 & 0b111) << 5) | d8;
+        return [c1, c2, c3, c4, c5];
+      }
+
+      function base16enc(c) {
+        return [c >>> 4, c & 0b1111];
+      }
+
+      function base16dec(d1, d2) {
+        return [(d1 << 4) | d2];
+      }
+
+      function throwInvalidTypeError() {
+        throw new TypeError("Unsupported Base-N encoding.");
+      }
+
+      function convertEnc(bytes, type) {
+        if (!bytes || bytes.length === 0) {
+          return "";
+        }
+        let config = CONFIG[type] || throwInvalidTypeError();
+        let result = "";
+        for (let i = 0, len = bytes.length; i < len; i += config.fromCharCount) {
+          let sequence = bytes.slice(i, i + config.fromCharCount);
+          config.enc(...sequence).forEach(v => {
+            result += v === -1 ? config.pad : config.chars[v];
+          });
+        }
+        return result;
+      };
+
+      function convertDec(chars, type) {
+        if (!chars || chars.length === 0) {
+          return "";
+        }
+        let config = CONFIG[type] || throwInvalidTypeError();
+        let result = [];
+        for (let i = 0, len = chars.length; i < len; i += config.toCharCount) {
+          let sequence = chars.slice(i, i + config.toCharCount).map(v => config.getIndex(v));
+          result.push(...config.dec(...sequence));
+        }
+        return result;
+      };
+
+      function getUintBuffer(src) {
+        return new Uint8Array(src);
+      }
+
+      function getBytes(str) {
+        let result = [];
+        for (let i = 0, len = str.length; i < len; i++) {
+          let v = str[i];
+          let cp = v.charCodeAt(0);
+          if (cp < 0x80) {
+            result.push(cp);
+          } else if (cp < 0x800) {
+            result.push((cp >>> 6) | 0xC0, cp & 0x3F | 0x80);
+          } else if (cp < 0x10000) {
+            result.push((cp >>> 12) | 0xE0, ((cp & 0xFC0) >>> 6) | 0x80, cp & 0x3F | 0x80);
+          } else {
+            result.push((cp >>> 18) | 0xF0, ((cp & 0x3F000) >>> 12) | 0x80, ((cp & 0xFC0) >>> 6) | 0x80, cp & 0x3F | 0x80);
+          }
+        };
+        return result;
+      }
+
+      function getString(bytes) {
+        let result = "";
+        for (let i = 0, len = bytes.length; i < len; i++) {
+          let x = bytes[i];
+          if ((x >>> 7) === 0) {
+            result += String.fromCharCode(x);
+            continue;
+          }
+          if ((x >>> 5) === 0b110) {
+            if (i + 1 <= len) {
+              let y = bytes[++i];
+              let cp = ((x & 0b11111) << 6) | (y & 0b111111);
+              result += String.fromCodePoint(cp);
+            }
+            continue;
+          }
+          if ((x >>> 4) === 0b1110) {
+            if (i + 2 <= len) {
+              let y = bytes[++i];
+              let z = bytes[++i];
+              let cp = ((x & 0b1111) << 12) | ((y & 0b111111) << 6) | (z & 0b111111);
+              result += String.fromCodePoint(cp);
+            }
+            continue;
+          }
+          if ((x >>> 3) === 0b11110) {
+            let y = bytes[++i];
+            let z = bytes[++i];
+            let u = bytes[++i];
+            let cp = ((x & 0b111) << 18) | ((y & 0b111111) << 12) | ((z & 0b111111) << 6) | (u & 0b111111);
+            result += String.fromCodePoint(cp);
+            continue;
+          }
+        }
+        return result;
+      }
+
+      /**
+       * @param {String | ArrayLike | ArrayBuffer | ArrayBufferView} src If String, use UTF-8.
+       * @param {Enum} BaseN.BASE64, BaseN.BASE64EX, BaseN.BASE32, BaseN.BASE32Ex, BaseN.BASE16.
+       * @return {String}
+       */
+      function encode(src, type = BASE64) {
+        let bytes;
+        if (typeof src === "string") {
+          bytes = getBytes(src);
+        } else if (src instanceof ArrayBuffer) {
+          bytes = getUintBuffer(src);
+        } else if (ArrayBuffer.isView(src)) {
+          bytes = getUintBuffer(src.buffer);
+        } else {
+          bytes = getUintBuffer(src);
+        }
+        return convertEnc(bytes, type);
+      }
+
+      /**
+      * @param {String} dst 
+      * @param {Enum} 
+      * @return {Array<Number>}
+      */
+      function decode(dst, type = BASE64) {
+        return convertDec([...dst], type);
+      }
+
+      /**
+      * @param {String} dst
+      * @param {Enum}
+      * @return {String} Use UTF-8 charset encoding.
+      */
+      function decodeToString(dst, type = BASE64) {
+        return getString(decode(dst, type));
+      }
+
+      return Object.assign(result, {
+        encode,
+        decode,
+        decodeToString
+      });
+
+      })();
+    
+  </script>
+</body>
+</html>
